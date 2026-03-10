@@ -8,9 +8,13 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
+    "db:up": "docker-compose -f ../docker-compose.yml up -d",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "tsc -w & nodemon dist/server.js"
+    "start": "npm run db:up && npx dotenv -- wait-on tcp:$DB_HOST:$DB_PORT && node dist/server.js",
+    "dev": "npm run db:up && npx dotenv -- wait-on tcp:$DB_HOST:$DB_PORT && tsc -w & nodemon dist/server.js",
+    "check": "npx tsc",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -21,7 +25,9 @@
     "eslint": "^10.0.3",
     "globals": "^17.4.0",
     "nodemon": "^3.1.14",
-    "typescript-eslint": "^8.57.0"
+    "typescript-eslint": "^8.57.0",
+    "dotenv-cli": "^7.4.2",
+    "wait-on": "^7.2.0"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",

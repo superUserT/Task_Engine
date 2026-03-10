@@ -3,6 +3,11 @@ import mainRouter from './routes';
 
 const app: Application = express();
 
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hello, World!');
+});
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
