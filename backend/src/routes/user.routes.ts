@@ -1,8 +1,11 @@
 import { Router } from 'express';
-import { getAllUsers } from '../controllers/user.controller';
+import { getAllUsers, createUser, loginUser } from '../controllers/user.controller';
 
 const router = Router();
 
-router.get('/', getAllUsers);
+router.post('/register', createUser);
+router.post('/login', loginUser);
+
+router.get('/', getAllUsers); // This should be protected in a real app
 
 export default router;

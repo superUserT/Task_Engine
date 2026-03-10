@@ -1,8 +1,19 @@
 import { Router } from 'express';
-import { getAllCohorts } from '../controllers/cohort.controller';
+import {
+  createCohort,
+  deleteCohort,
+  getAllCohorts,
+  getCohortById,
+  updateCohort,
+} from '../controllers/cohort.controller';
+import { protect } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.get('/', getAllCohorts);
+// A great practice is to protect all routes within a file at once if they share the same auth requirements.
+router.use(protect);
+
+router.route('/').get(getAllCohorts).post(createCohort);
+router.route('/:id').get(getCohortById).put(updateCohort).delete(deleteCohort);
 
 export default router;
