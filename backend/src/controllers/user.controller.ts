@@ -20,6 +20,22 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const user = await userRepository.findOne({
+      where: { id: req.params.id as string },
+      select: ['id', 'name', 'email', 'created_at', 'updated_at'],
+    });
+    if (!user) {
+      return res.status(404).json(formatResponse(false, errorMessages.notFound('User')));
+    }
+    res.status(200).json(formatResponse(true, successMessages.retrieved('User'), user));
+  } catch (error) {
+    logger.error(errorMessages.retrievalError('user'), error);
+    res.status(500).json(formatResponse(false, errorMessages.retrievalError('user')));
+  }
+};
+
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
@@ -40,6 +56,20 @@ export const createUser = async (req: Request, res: Response) => {
       return res.status(409).json(formatResponse(false, errorMessages.emailExists));
     }
     res.status(500).json(formatResponse(false, errorMessages.creationError('user')));
+  }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const result = await userRepository.update(req.params.id as string, req.body);
+    if (result.affected === 0) {
+      return res.status(404).json(formatResponse(false, errorMessages.notFound('User')));
+    }
+    const updatedUser = await userRepository.findOneBy({ id: req.params.id as string });
+    res.status(200).json(formatResponse(true, successMessages.updated('User'), updatedUser));
+  } catch (error) {
+    logger.error(errorMessages.updateError('user'), error);
+    res.status(500).json(formatResponse(false, errorMessages.updateError('user')));
   }
 };
 

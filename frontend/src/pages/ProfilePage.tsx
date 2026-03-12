@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { register as registerUser } from '../services/authService';
-import { useNavigate, Link } from 'react-router-dom';
+import { updateUser } from '../services/userService';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -13,33 +12,44 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-const Register: React.FC = () => {
+const ProfilePage: React.FC = () => {
+  const { user, login } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useAuth();
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    }
+  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      // The backend expects 'name', so we send 'name'
-      const { token, user } = await registerUser({ name, email, password });
-      login(token, user);
-      navigate('/');
-    } catch (error) {
-      console.error('Registration failed', error);
-      // You can add user-facing error handling here
+    if (user) {
+      try {
+        const updatedUser = await updateUser(user.id, { name, email });
+        // The token does not need to be updated, but the user in the context does.
+        login(localStorage.getItem('token')!, updatedUser);
+        // Optionally, show a success message
+      } catch (error) {
+        console.error('Failed to update profile', error);
+        // Optionally, show an error message
+      }
     }
   };
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
-          <CardTitle className="text-xl">Sign Up</CardTitle>
+          <CardTitle className="text-2xl">Profile</CardTitle>
           <CardDescription>
-            Enter your information to create an account
+            Update your profile information.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -48,7 +58,6 @@ const Register: React.FC = () => {
               <Label htmlFor="name">Name</Label>
               <Input
                 id="name"
-                placeholder="Max Robinson"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -59,37 +68,19 @@ const Register: React.FC = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
             <Button type="submit" className="w-full">
-              Create an account
+              Update Profile
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
-            Already have an account?{' '}
-            <Link to="/login" className="underline">
-              Sign in
-            </Link>
-          </div>
         </CardContent>
       </Card>
     </div>
   );
 };
 
-export default Register;
-
+export default ProfilePage;
