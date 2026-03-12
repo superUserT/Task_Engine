@@ -1,7 +1,6 @@
-# The "Memory Refresh" Project: AI-Augmented Task Engine
+# Project: AI-Augmented Task Engine
 
-You will build a mini-app that uses your stack (React, Node, PostgreSQL) to manage "Team Sprints" (referencing your Junior Lead experience).
-
+mini-app that uses your stack (React, Node, PostgreSQL) to manage "Team Sprints"
 
 
 ## Backend
@@ -45,34 +44,31 @@ You will build a mini-app that uses your stack (React, Node, PostgreSQL) to mana
 
 ```
 
-## Day 1: The "Engine" (Backend & DB)
+## The "Engine" (Backend & DB)
 
     Goal: Build a robust API with Auth.
 
-    Steps: 1.  DB Schema: Use PostgreSQL to create Users, Tasks, and Cohorts tables. Focus on relational integrity.
-    2.  Auth Middleware: Implement JWT authentication. Write a custom middleware to protect routes.
-    3.  AI Usage: Use ChatGPT/Claude to generate the initial boilerplate and SQL migrations. This proves you can leverage tools to ship faster.
-
-## Day 2: The "Bridge" (Frontend & TS)
+    DB Schema: Use PostgreSQL to create Users, Tasks, and Cohorts tables. Focus on relational integrity.
+    Auth Middleware: Implement JWT authentication. Write a custom middleware to protect routes.
+   
+##  The "Bridge" (Frontend & TS)
 
     Goal: Connect the UI with type-safe interfaces.
 
     Steps:
-
-        React Setup: Build a dashboard with a focus on "Human Experience" (clean layout, loading states).
-
-        TS Implementation: Define Interfaces for your API responses. Ensure your frontend components are strictly typed.
-
+        dashboard with a focus on "Human Experience" (clean layout, loading states).
+        Interfaces for your API responses. Ensure your frontend components are strictly typed.
         State Management: Use the Context API or useReducer to manage the app's global state (e.g., current user info).
 
-## Day 3: The "Polish" (AI Integration & Testing)
+## The "Polish" (AI Integration & Testing)
 
     Goal: Add a "Smart" feature and prove reliability.
 
     Steps:
+      Add a button that uses an AI API to "summarize" the tasks for a specific cohort.
+      Testing: Write Jest tests for your auth middleware and one key frontend component.
 
-        AI Feature: Add a button that uses an AI API to "summarize" the tasks for a specific cohort.
 
-        Testing: Write Jest tests for your auth middleware and one key frontend component.
+# Frontend
 
-        Deployment Prep: Ensure you can explain every architectural decision (e.g., "Why PostgreSQL over MongoDB?") using the STAR method.
+// not yet started

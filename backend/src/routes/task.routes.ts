@@ -10,7 +10,6 @@ import { protect } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-// Protect all task-related routes
 router.use(protect);
 
 router.route('/').get(getAllTasks).post(createTask);

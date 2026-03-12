@@ -10,7 +10,6 @@ import { protect } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-// A great practice is to protect all routes within a file at once if they share the same auth requirements.
 router.use(protect);
 
 router.route('/').get(getAllCohorts).post(createCohort);

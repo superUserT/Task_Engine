@@ -6,6 +6,5 @@ const router = Router();
 router.post('/register', createUser);
 router.post('/login', loginUser);
 
-router.get('/', getAllUsers); // This should be protected in a real app
-
+router.get('/', getAllUsers); 
 export default router;

@@ -1,6 +1,4 @@
--- AI-Augmented Task Engine Schema
--- This schema is designed for PostgreSQL and is based on the project description.
--- It establishes the core tables: Users, Cohorts, and Tasks, with a focus on relational integrity.
+
 
 -- Enable UUID generation
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
