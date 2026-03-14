@@ -1,95 +1,114 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { Button } from '@/components/ui/button';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, User as UserIcon } from 'lucide-react';
+  AppBar,
+  Toolbar,
+  Button,
+  IconButton,
+  Avatar,
+  Menu,
+  MenuItem,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
+import { Logout, Person } from "@mui/icons-material";
 
 const Header: React.FC = () => {
   const { user, logout, isLoading } = useAuth();
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    handleClose();
+    navigate("/login");
+  };
+
+  const handleProfile = () => {
+    navigate("/profile");
+    handleClose();
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <NavigationMenu className="flex-1">
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link to="/" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Dashboard
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+    <AppBar position="sticky">
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            Dashboard
+          </Link>
+        </Typography>
 
-        <div className="flex flex-1 items-center justify-end space-x-4">
-          <nav className="flex items-center space-x-1">
-            {isLoading ? (
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-dashed border-primary"></div>
-            ) : user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="secondary" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={`https://avatar.vercel.sh/${user.email}.png`} alt={user.name} />
-                      <AvatarFallback>{user.name?.[0].toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user.name}</p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user.email}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate('/profile')}>
-                    <UserIcon className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button asChild>
-                <Link to="/login">Login</Link>
-              </Button>
-            )}
-          </nav>
-        </div>
-      </div>
-    </header>
+        {isLoading ? (
+          <CircularProgress color="inherit" size={24} />
+        ) : user ? (
+          <div>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <Avatar
+                src={`https://avatar.vercel.sh/${user.email}.png`}
+                alt={user.username}
+              >
+                {user.username?.[0].toUpperCase()}
+              </Avatar>
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem disabled>
+                <Typography variant="body2" color="text.secondary">
+                  {user.username}
+                </Typography>
+              </MenuItem>
+              <MenuItem disabled>
+                <Typography variant="caption" color="text.secondary">
+                  {user.email}
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleProfile}>
+                <Person sx={{ mr: 1 }} />
+                Profile
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <Logout sx={{ mr: 1 }} />
+                Log out
+              </MenuItem>
+            </Menu>
+          </div>
+        ) : (
+          <Button color="inherit" component={Link} to="/login">
+            Login
+          </Button>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 };
 
 export default Header;
-

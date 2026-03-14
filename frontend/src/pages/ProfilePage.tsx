@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { updateUser } from '../services/userService';
-import { Button } from '@/components/ui/button';
 import {
+  Button,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+  CircularProgress,
+  Container,
+  TextField,
+  Typography,
+  Box,
+} from '@mui/material';
 
 const ProfilePage: React.FC = () => {
   const { user, login } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
       setName(user.name);
       setEmail(user.email);
+      setLoading(false);
     }
   }, [user]);
 
@@ -39,47 +42,64 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <Container sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Container>
+    );
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <Card className="mx-auto max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Profile</CardTitle>
-          <CardDescription>
-            Update your profile information.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Card sx={{ minWidth: 275, mt: 4 }}>
+          <CardHeader title="Profile" subheader="Update your profile information." />
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 id="name"
+                label="Name"
+                name="name"
+                autoComplete="name"
+                autoFocus
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 id="email"
-                type="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
               />
-            </div>
-            <Button type="submit" className="w-full">
-              Update Profile
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Update Profile
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </Box>
+    </Container>
   );
 };
 

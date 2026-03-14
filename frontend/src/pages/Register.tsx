@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { register as registerUser } from '../services/authService';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import {
+  Button,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+  TextField,
+  Typography,
+  Container,
+  Box,
+} from '@mui/material';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
@@ -23,7 +23,6 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // The backend expects 'name', so we send 'name'
       const { token, user } = await registerUser({ name, email, password });
       login(token, user);
       navigate('/');
@@ -34,62 +33,74 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <Card className="mx-auto max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Sign Up</CardTitle>
-          <CardDescription>
-            Enter your information to create an account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Card sx={{ minWidth: 275, mt: 4 }}>
+          <CardHeader title="Sign Up" subheader="Enter your information to create an account" />
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 id="name"
-                placeholder="Max Robinson"
+                label="Name"
+                name="name"
+                autoComplete="name"
+                autoFocus
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 id="email"
-                type="email"
-                placeholder="m@example.com"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
                 type="password"
+                id="password"
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
               />
-            </div>
-            <Button type="submit" className="w-full">
-              Create an account
-            </Button>
-          </form>
-          <div className="mt-4 text-center text-sm">
-            Already have an account?{' '}
-            <Link to="/login" className="underline">
-              Sign in
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Create an account
+              </Button>
+            </form>
+            <Typography variant="body2" align="center">
+              Already have an account?{' '}
+              <Link to="/login" style={{ textDecoration: 'none' }}>
+                Sign in
+              </Link>
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
+    </Container>
   );
 };
 
 export default Register;
-

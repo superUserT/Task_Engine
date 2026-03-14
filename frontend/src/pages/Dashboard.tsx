@@ -5,27 +5,26 @@ import { getUsers } from '../services/userService';
 import { Cohort } from '../types/Cohort';
 import { Task } from '../types/Task';
 import { User } from '../types/User';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
-  TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+  TextField,
+  Typography,
+} from '@mui/material';
 
 const Dashboard: React.FC = () => {
   const [cohorts, setCohorts] = useState<Cohort[]>([]);
@@ -65,112 +64,121 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
+    <div style={{ padding: '20px' }}>
+      <Typography variant="h4" component="h2" gutterBottom>
+        Dashboard
+      </Typography>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Cohorts</CardTitle>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button>Create Cohort</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Create New Cohort</DialogTitle>
-                  <DialogDescription>
-                    Enter a name for your new cohort.
-                  </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleCreateCohort}>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="name" className="text-right">
-                        Name
-                      </Label>
-                      <Input
-                        id="name"
-                        value={newCohortName}
-                        onChange={(e) => setNewCohortName(e.target.value)}
-                        className="col-span-3"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">Create</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {cohorts.map((cohort) => (
-                  <TableRow key={cohort.id}>
-                    <TableCell>{cohort.name}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6} lg={4}>
+          <Card>
+            <CardHeader
+              title="Cohorts"
+              action={
+                <Button variant="contained" onClick={() => setIsDialogOpen(true)}>
+                  Create Cohort
+                </Button>
+              }
+            />
+            <CardContent>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {cohorts.map((cohort) => (
+                      <TableRow key={cohort.id}>
+                        <TableCell>{cohort.name}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Tasks</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {tasks.map((task) => (
-                  <TableRow key={task.id}>
-                    <TableCell>{task.title}</TableCell>
-                    <TableCell>{task.status}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        <Grid item xs={12} md={6} lg={4}>
+          <Card>
+            <CardHeader title="Tasks" />
+            <CardContent>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Title</TableCell>
+                      <TableCell>Status</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {tasks.map((task) => (
+                      <TableRow key={task.id}>
+                        <TableCell>{task.title}</TableCell>
+                        <TableCell>{task.status}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Users</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {users.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>{user.username}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
+        <Grid item xs={12} md={6} lg={4}>
+          <Card>
+            <CardHeader title="Users" />
+            <CardContent>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Email</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>{user.username}</TableCell>
+                        <TableCell>{user.email}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+        <DialogTitle>Create New Cohort</DialogTitle>
+        <form onSubmit={handleCreateCohort}>
+          <DialogContent>
+            <DialogContentText>
+              Enter a name for your new cohort.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Cohort Name"
+              type="text"
+              fullWidth
+              value={newCohortName}
+              onChange={(e) => setNewCohortName(e.target.value)}
+              required
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+            <Button type="submit">Create</Button>
+          </DialogActions>
+        </form>
+      </Dialog>
     </div>
   );
 };

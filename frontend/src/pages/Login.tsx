@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { login as loginUser } from '../services/authService';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import {
+  Button,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+  TextField,
+  Typography,
+  Container,
+  Box,
+} from '@mui/material';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -32,55 +32,63 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <Card className="mx-auto max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Card sx={{ minWidth: 275, mt: 4 }}>
+          <CardHeader title="Login" subheader="Enter your email below to login to your account" />
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 id="email"
-                type="email"
-                placeholder="m@example.com"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
               />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                {/* Optional: Add a "Forgot password?" link here */}
-              </div>
-              <Input
-                id="password"
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
                 type="password"
+                id="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
               />
-            </div>
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
-          </form>
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link to="/register" className="underline">
-              Sign up
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Login
+              </Button>
+            </form>
+            <Typography variant="body2" align="center">
+              Don&apos;t have an account?{' '}
+              <Link to="/register" style={{ textDecoration: 'none' }}>
+                Sign up
+              </Link>
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
+    </Container>
   );
 };
 
 export default Login;
-
